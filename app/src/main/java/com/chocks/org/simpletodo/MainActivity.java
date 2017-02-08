@@ -1,5 +1,6 @@
 package com.chocks.org.simpletodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import static com.chocks.org.simpletodo.R.id.etAddItem;
 
 public class MainActivity extends AppCompatActivity {
+    static final int EDIT_REQUEST = 2903;  // The request code
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
-
+        setupEditViewListener();
     }
 
     public void onAddItem(View v) {
@@ -52,6 +54,30 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void setupEditViewListener() {
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+                intent.putExtra("text", items.get(position));
+                intent.putExtra("position", position);
+                startActivityForResult(intent, EDIT_REQUEST);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDIT_REQUEST && resultCode == RESULT_OK) {
+            // Extract name value from result extras
+            String text = data.getExtras().getString("text");
+            int position = data.getExtras().getInt("position", 0);
+            items.set(position, text);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+        }
     }
 
     private void readItems() {
