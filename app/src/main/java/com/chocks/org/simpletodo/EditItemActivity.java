@@ -23,12 +23,14 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void onSaveItem(View v) {
         EditText etName = (EditText) findViewById(etSaveItem);
-        // Prepare data intent
         Intent data = new Intent();
-        // Pass relevant data back as a result
         data.putExtra("text", etName.getText().toString());
         data.putExtra("position", position);
-        setResult(RESULT_OK, data); // set result code and bundle data for response
-        finish(); // closes the activity, pass data to parent
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    public void onCancel(View v) {
+        finish();
     }
 }

@@ -28,3 +28,39 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     testCompile 'junit:junit:4.12'
 }
+
+buildscript {
+    repositories {
+        // required for this library, don't use mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}
+
+apply plugin: 'com.neenbedankt.android-apt'
+
+def dbflow_version = "3.1.1"
+
+dependencies {
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    apt 'org.parceler:parceler:1.1.1'
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+    compile 'org.parceler:parceler-api:1.1.1'
+
+    // sql-cipher database encryption (optional)
+    // compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
+}
+
+
+
+
